@@ -73,7 +73,7 @@ public class Patch extends Thread {
     
     //--- Functions while model is running ---//
 
-    public void replenish() {
+    public synchronized void replenish() {
         this.grain = this.maxGrain;
     }
 

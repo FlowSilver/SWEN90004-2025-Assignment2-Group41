@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Person extends Thread {
+public class Person{
     private int lifeExpectancy;
     private int age; 
     private int metabolism;
@@ -78,45 +78,25 @@ public class Person extends Thread {
         return this.wealth >= 0;
     }
 
+    public boolean isAlive() {
+        // Metabolize and Age to check if alive
+        return metabolize() && age < lifeExpectancy;
+    }
+
     // Run method for thread-based execution
-    @Override
-    public synchronized  void run() {
-        while (!this.isInterrupted()) {
-            try {
-                // Move to best patch
-                Patch bestPatch = findBestPatch();
-                if (bestPatch != currentPatch) {
-                    currentPatch.setPerson(null);
-                    bestPatch.setPerson(this);
-                    currentPatch = bestPatch;
-                }
+    public synchronized void tick() {
 
-                // Harvest grain
-                harvest();
-
-                // Metabolize and check if alive
-                if (!metabolize()) {
-                    currentPatch.setPerson(null);
-                    this.interrupt();
-                    return;
-                }
-
-                // Age and check life expectancy
-                age++;
-                if (age >= lifeExpectancy) {
-                    currentPatch.setPerson(null);
-                    this.interrupt();
-                    return;
-                }
-
-                // Wait for next tick
-                sleep(Params.GRAIN_GROWTH_INTERVAL);
-            } catch (InterruptedException e) {
-                currentPatch.setPerson(null);
-                this.interrupt();
-                return;
-            }
+        // Move to best patch
+        Patch bestPatch = findBestPatch();
+        if (bestPatch != currentPatch) {
+            currentPatch.setPerson(null);
+            bestPatch.setPerson(this);
+            currentPatch = bestPatch;
         }
+
+        // Harvest grain
+        harvest();
+            
     }
 
     //--- Getter and setter functions ---//

@@ -7,17 +7,23 @@ package src;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CyclicBarrier;
 
 public class World {
     public static final int maxCoord = 51; //not a parameter; determines max size of map
+    private final CyclicBarrier barrier;
     private Patch[][] map; 
     private List<Person> people;
 
     // This is synonymous to the setup phase in the NetLogo version of the program.
     public World() {
-        people = new ArrayList<>();
+        this.people = new ArrayList<>();
+        
+        // All people must reach the barrier before continuing to the next round
+        this.barrier = new CyclicBarrier(Params.NUM_PEOPLE + 1);
         setupPatches();
         setupPeople();
+
     }
 
     //--- Setup functions ---//
@@ -90,28 +96,6 @@ public class World {
         }
     }
 
-    // Reproduction rule (Replace dead agents)
-    private synchronized void processReproduction() {
-        // Reproduction and Population Maintenance (Replace dead agents)
-        this.people.removeIf(p -> !p.isAlive());
-        while (this.people.size() < Params.NUM_PEOPLE) {
-            int x, y;
-            Patch patch;
-            do {
-                x = Params.rollCoord();
-                y = Params.rollCoord();
-                patch = map[x][y];
-            } while (patch.getPerson() != null);
-            Person person = new Person(this);
-            person.setPatch(patch);
-            patch.setPerson(person);
-            this.people.add(person);
-            person.start();
-        }
-                
-
-    }
-
     private synchronized void printStatistics(int tick) {
         double totalWealth = people.stream().mapToDouble(Person::getWealth).sum();
         double minWealth = people.stream().mapToDouble(Person::getWealth).min().orElse(0);
@@ -129,6 +113,25 @@ public class World {
                 tick, totalWealth, minWealth, maxWealth, avgWealth, gini);
         
     }
+    
+    // Reproduction
+    private synchronized void processReproduction() {
+        people.removeIf(p -> !p.isAlive());
+        while (people.size() < Params.NUM_PEOPLE) {
+            int x, y;
+            Patch patch;
+            do {
+                x = Params.rollCoord();
+                y = Params.rollCoord();
+                patch = map[x][y];
+            } while (patch.getPerson() != null);
+            Person person = new Person(this);
+            person.setPatch(patch);
+            patch.setPerson(person);
+            people.add(person);
+        }
+    }
+
 
     public void runSimulation() {
         // Start patch threads
@@ -138,32 +141,23 @@ public class World {
             }
         }
 
-        // Start person threads
-        for (Person person : people) {
-            person.start();
-        }
-
         // Simulation loop
         for (int tick = 0; tick < Params.MAX_TICK; tick++) {
-            try {
-                // Reproduction and Population Maintenance (Replace dead agents)
-                processReproduction();
 
-                // Print statistics every 100 ticks
-                if (tick % Params.PRINT_INTERVAL == 0) {
-                    printStatistics(tick);
-                }
-
-                Thread.sleep(Params.GRAIN_GROWTH_INTERVAL);
-            } catch (InterruptedException e) {
-                break;
+            for(Person agent: this.people) {
+                agent.tick();
             }
+            // Print statistics every 100 ticks
+            if (tick % 100 == 0) {
+                printStatistics(tick);
+            }
+            tick++;
+            processReproduction();
+
+            
         }
 
         // Stop all threads
-        for (Person person : people) {
-            person.interrupt();
-        }
         for (int i = 0; i < maxCoord; i++) {
             for (int j = 0; j < maxCoord; j++) {
                 map[i][j].interrupt();
@@ -181,4 +175,11 @@ public class World {
         this.map = map;
     }
 
+    public List<Person> getPeople() {
+        return this.people;
+    }
+
+    public CyclicBarrier getBarrier() {
+        return this.barrier;
+    }
 }
