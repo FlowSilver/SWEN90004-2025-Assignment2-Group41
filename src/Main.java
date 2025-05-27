@@ -6,7 +6,7 @@ public class Main {
 
     public static void main(String[] args) {
         World world = new World();
-
-        Patch[][] map = world.getMap();
+        System.out.println("Starting Wealth Distribution Simulation...");
+        world.runSimulation();
     }
 }
