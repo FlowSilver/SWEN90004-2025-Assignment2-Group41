@@ -1,5 +1,4 @@
 package src;
-import java.lang.Math;
 import java.util.*;
 
 public class Patch extends Thread {
@@ -78,12 +77,18 @@ public class Patch extends Thread {
         this.grain = this.maxGrain;
     }
 
+    @Override
     public void run() {
-        while(!this.isInterrupted()) {
+        while (!this.isInterrupted()) {
             try {
+                // Replenish grain at specified interval
+                replenish();
                 sleep(Params.GRAIN_GROWTH_INTERVAL);
-            } catch (InterruptedException e) {}
-        } 
+            } catch (InterruptedException e) {
+                this.interrupt();
+                return;
+            }
+        }
     }
 
 
@@ -111,6 +116,14 @@ public class Patch extends Thread {
 
     public double getMaxGrain() {
         return maxGrain;
+    }
+
+    public int getXCoord() {
+        return xCoord;
+    }
+
+    public int getYCoord() {
+        return yCoord;
     }
 }
 
