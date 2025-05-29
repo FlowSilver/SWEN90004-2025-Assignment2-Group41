@@ -1,12 +1,14 @@
 /* This is where the model will run */
 
-package src;
+import world.Simulation;
 
 public class Main {
 
     public static void main(String[] args) {
-        World world = new World();
-
-        Patch[][] map = world.getMap();
+        Simulation simulation = new Simulation();
+        simulation.simulateVariousGrowthRate();
+        simulation.simulateVariousPopulation();
+        simulation.simulateVariousReproductionRule();
     }
+
 }

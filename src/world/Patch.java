@@ -1,8 +1,10 @@
-package src;
-import java.lang.Math;
-import java.util.*;
+package world;
+import java.util.ArrayList;
+import java.util.List;
+import person.Person;
+import util.Params;
 
-public class Patch extends Thread {
+public class Patch{
     private double grain;
     private double maxGrain;
     private int xCoord;
@@ -74,18 +76,9 @@ public class Patch extends Thread {
     
     //--- Functions while model is running ---//
 
-    public void replenish() {
+    public synchronized void replenish() {
         this.grain = this.maxGrain;
     }
-
-    public void run() {
-        while(!this.isInterrupted()) {
-            try {
-                sleep(Params.GRAIN_GROWTH_INTERVAL);
-            } catch (InterruptedException e) {}
-        } 
-    }
-
 
     //--- Getter and setter functions ---//
 
@@ -111,6 +104,14 @@ public class Patch extends Thread {
 
     public double getMaxGrain() {
         return maxGrain;
+    }
+
+    public int getXCoord() {
+            return xCoord;
+    }
+
+    public int getYCoord() {
+        return yCoord;
     }
 }
 
