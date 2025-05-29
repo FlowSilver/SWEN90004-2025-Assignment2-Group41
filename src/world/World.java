@@ -7,7 +7,6 @@ package world;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CyclicBarrier;
 import person.Person;
 import person.strategy.DefaultStrategy;
 import person.strategy.ReproductionStrategy;
@@ -18,20 +17,26 @@ public class World {
     private Patch[][] map; 
     private List<Person> people;
     private ReproductionStrategy strategy;
+    private int numPeople;
+    private int grainGrowthRate;
 
     // This is synonymous to the setup phase in the NetLogo version of the program.
-    public World() {
+    public World(int numPeople, int grainGrowthRate) {
         this.people = new ArrayList<>();
         this.strategy = new DefaultStrategy();
+        this.numPeople = numPeople;
+        this.grainGrowthRate = grainGrowthRate;
         setupPatches();
         setupPeople();
 
     }
 
     // This is synonymous to the setup phase in the NetLogo version of the program.
-    public World(ReproductionStrategy strategy) {
+    public World(int numPeople, int grainGrowthRate, ReproductionStrategy strategy) {
         this.people = new ArrayList<>();
         this.strategy = strategy;
+        this.numPeople = numPeople;
+        this.grainGrowthRate = grainGrowthRate;
         setupPatches();
         setupPeople();
 
@@ -44,7 +49,7 @@ public class World {
     // Creates all the people and places them randomly on the map
     public void setupPeople() {
         people.clear();
-        for (int i = 0; i < Params.NUM_PEOPLE; i++) {
+        for (int i = 0; i < this.numPeople; i++) {
             int x, y;
             Patch patch;
 
@@ -63,7 +68,6 @@ public class World {
 
     // Creates and populates the world with patches of various levels of productivity
     public void setupPatches() {
-
         // Initial creation of patches
         this.map = new Patch[maxCoord][maxCoord];
         for (int x = 0; x<maxCoord; x++) {
@@ -131,7 +135,7 @@ public class World {
         for (int tick = 0; tick < Params.MAX_TICK; tick++) {
 
             // Replenish
-            if (tick % Params.GRAIN_GROWTH_INTERVAL == 0) {
+            if (tick % this.grainGrowthRate == 0) {
                 for (Patch[] row : map) {
                     for (Patch patch : row) {
                         // Replenish
