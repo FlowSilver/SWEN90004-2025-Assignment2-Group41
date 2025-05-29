@@ -111,7 +111,7 @@ public class World {
         }
     }
 
-    private synchronized void printStatistics(int tick) {
+    protected synchronized void printStatistics(int tick) {
         double totalWealth = people.stream().mapToDouble(Person::getWealth).sum();
         double minWealth = people.stream().mapToDouble(Person::getWealth).min().orElse(0);
         double maxWealth = people.stream().mapToDouble(Person::getWealth).max().orElse(0);

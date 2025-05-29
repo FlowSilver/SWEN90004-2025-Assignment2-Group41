@@ -23,6 +23,6 @@ public class InheritanceStrategy implements ReproductionStrategy {
 
     @Override
     public String toString() {
-        return "where offspring will spawn at its parent's patch with inheritance of wealth.";
+        return "Inheritance";
     }
 }

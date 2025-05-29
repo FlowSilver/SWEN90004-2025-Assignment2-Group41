@@ -30,6 +30,6 @@ public class RandomSpawnStrategy implements ReproductionStrategy{
 
     @Override
     public String toString() {
-        return "where offspring will randomly spawn without inheritance.";
+        return "RandomSpawn";
     }
 }

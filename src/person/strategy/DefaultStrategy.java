@@ -22,6 +22,6 @@ public class DefaultStrategy implements ReproductionStrategy {
 
     @Override
     public String toString() {
-        return "where offspring will spawn at its parent's patch without inheritance.";
+        return "Default";
     }
 }

@@ -16,7 +16,7 @@ public class Params {
     public static final int GRAIN_GROWTH_INTERVAL = 10; // how long it takes for each grain to replenish (in ticks)
     public static final int MAX_METABOLISM = 15; // the maximum amount of grain consumed per tick
     public static final int MAX_VISION = 5; // the furthest possible distance that a person can see
-    public static final int MAX_TICK = 20000; // the maximum tick number of a simulation
+    public static final int MAX_TICK = 7000; // the maximum tick number of a simulation
     public static final int PRINT_INTERVAL = 100; // interval for printing statistics (every 100 ticks)
 
     //--- Randomisers for Patch and Person classes ---//
