@@ -1,12 +1,14 @@
 /* This is where the model will run */
 
-package src;
+import person.strategy.DefaultStrategy;
+import person.strategy.InheritanceStrategy;
+import person.strategy.RandomSpawnStrategy;
+import world.World;
 
 public class Main {
 
     public static void main(String[] args) {
-        World world = new World();
-        System.out.println("Starting Wealth Distribution Simulation...");
+        World world = new World(new InheritanceStrategy());
         world.runSimulation();
     }
 }
