@@ -5,9 +5,11 @@ import matplotlib.pyplot as plt
 
 # --- Ensure plots directory exists ---
 plot_dir = "plots"
-os.makedirs(plot_dir, exist_ok=True)
+os.makedirs(plot_dir, exist_ok=True) # Create 'plots' directory if it doesn't exist
 
-# --- Hardcoded Input/Output File Paths ---
+# --- Hardcoded list of input and output CSV file pairs ---
+# When changing Simulation.java, please changing this as well
+# Each tuple contains the input CSV filename and the corresponding processed output CSV filename
 input_output_pairs = [
     ("Default.csv", "Default_Processed.csv"),
     ("RandomSpawn.csv", "RandomSpawn_Processed.csv"),
@@ -23,10 +25,19 @@ input_output_pairs = [
 ]
 
 def process_file(input_file, output_file):
-    data_by_tick = defaultdict(list)
-    tick_interval = 10000
+    """
+    Process the input CSV file by grouping rows by tick % tick_interval,
+    then calculate summary statistics per tick_interval and write them to output CSV.
 
-    # Read and group by tick % 6900
+    Args:
+        input_file (str): Path to the input CSV file.
+        output_file (str): Path where the processed CSV will be saved.
+    """
+    data_by_tick = defaultdict(list)
+
+    # Tick_Interval, when changing this, also changing MAX_TICK in Params.java
+    tick_interval = 10000
+    # Read input CSV and group data by tick % tick_interval
     with open(input_file, newline='') as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
@@ -34,28 +45,43 @@ def process_file(input_file, output_file):
             values = list(map(float, row[1:]))
             data_by_tick[tick].append(values)
 
-    # Write output CSV
+    # Write summary statistics to output CSV
     with open(output_file, 'w', newline='') as out_csv:
         writer = csv.writer(out_csv)
+        # Write header row
         writer.writerow(['tick', 'totalWealth', 'minWealth', 'maxWealth', 'avgWealth', 'gini'])
 
+         # Calculate statistics for each tick and write to CSV
         for tick in sorted(data_by_tick.keys()):
             rows = data_by_tick[tick]
+
+            # Calculate mean statistics over all rows for this tick
             total_wealth = sum(r[0] for r in rows) / len(rows)
             min_wealth = min(r[1] for r in rows) / len(rows)
             max_wealth = max(r[2] for r in rows) / len(rows)
             avg_wealth = sum(r[3] for r in rows) / len(rows)
             avg_gini = sum(r[4] for r in rows) / len(rows)
 
+            # Write a row of aggregated data for this tick
             writer.writerow([tick, round(total_wealth, 2), round(min_wealth, 2),
                              round(max_wealth, 2), round(avg_wealth, 2), round(avg_gini, 4)])
 
 def plot_output(output_file, input_filename_base):
+    """
+    Generate and save a plot from the processed output CSV file showing
+    total wealth, average wealth, and Gini coefficient over ticks.
+
+    Args:
+        output_file (str): Path to the processed CSV file.
+        input_filename_base (str): Base name used to label and save plot files.
+    """
     ticks = []
     total_wealths = []
     avg_wealths = []
     ginis = []
 
+
+    # Read processed CSV file using DictReader for convenience
     with open(output_file, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
@@ -64,14 +90,18 @@ def plot_output(output_file, input_filename_base):
             avg_wealths.append(float(row['avgWealth']))
             ginis.append(float(row['gini']))
 
+
+    # Create plot with two y-axes:
+    # Left y-axis for wealth values, right y-axis for Gini coefficient
     fig, ax1 = plt.subplots()
 
     ax1.set_xlabel('Tick')
-    ax1.set_ylabel('Total Wealth / Avg Wealth', color='tab:blue')
+    ax1.set_ylabel('Total Wealth or Avg Wealth', color='tab:blue')
     ax1.plot(ticks, total_wealths, label='Total Wealth', color='tab:blue', linestyle='-')
     ax1.plot(ticks, avg_wealths, label='Avg Wealth', color='tab:blue', linestyle='--')
     ax1.tick_params(axis='y', labelcolor='tab:blue')
 
+    # Secondary y-axis for Gini coefficient
     ax2 = ax1.twinx()
     ax2.set_ylabel('Gini Coefficient', color='tab:red')
     ax2.plot(ticks, ginis, label='Gini', color='tab:red', linestyle='-.')
@@ -81,14 +111,16 @@ def plot_output(output_file, input_filename_base):
     plt.title(f"Wealth and Gini over Time: {input_filename_base}")
     fig.legend(loc="lower right")
 
-    # Save plot to file
+    # Save plot image to 'plots' directory
     plot_path = os.path.join(plot_dir, f"{input_filename_base}_plot.png")
     plt.savefig(plot_path)
     plt.close()
     print(f"Saved plot to {plot_path}")
 
-# --- Main Execution ---
+
+# --- Main execution loop ---
+# Process each pair of input/output files, generate processed CSV and plot
 for input_file, output_file in input_output_pairs:
-    base_name = os.path.splitext(os.path.basename(input_file))[0]
-    process_file(input_file, output_file)
-    plot_output(output_file, base_name)
+    base_name = os.path.splitext(os.path.basename(input_file))[0] # Get filename without extension
+    process_file(input_file, output_file) # Process and generate processed CSV
+    plot_output(output_file, base_name)  # Generate and save plot for processed data

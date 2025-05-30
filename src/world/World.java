@@ -8,7 +8,6 @@ package world;
 import java.util.ArrayList;
 import java.util.List;
 import person.Person;
-import person.strategy.DefaultStrategy;
 import person.strategy.ReproductionStrategy;
 import util.Params;
 
@@ -20,18 +19,15 @@ public class World {
     private int numPeople;
     private int grainGrowthRate;
 
-    // This is synonymous to the setup phase in the NetLogo version of the program.
-    public World(int numPeople, int grainGrowthRate) {
-        this.people = new ArrayList<>();
-        this.strategy = new DefaultStrategy();
-        this.numPeople = numPeople;
-        this.grainGrowthRate = grainGrowthRate;
-        setupPatches();
-        setupPeople();
 
-    }
-
-    // This is synonymous to the setup phase in the NetLogo version of the program.
+    /**
+     * Constructor to initialize the world with a specified reproduction strategy.
+     * Sets up the patches and people on the map.
+     *
+     * @param numPeople the number of people to place on the map
+     * @param grainGrowthRate the interval at which grain grows on patches
+     * @param strategy the reproduction strategy to use for the simulation
+     */
     public World(int numPeople, int grainGrowthRate, ReproductionStrategy strategy) {
         this.people = new ArrayList<>();
         this.strategy = strategy;
@@ -44,16 +40,17 @@ public class World {
 
     //--- Setup functions ---//
 
-    // DELETE WHEN CONSIDERED: you may want to add a people list if you want easy access to them, for example if you do this non concurrently
-
-    // Creates all the people and places them randomly on the map
+    /**
+     * Initializes people by placing them randomly on patches of the map.
+     * Ensures no two people occupy the same patch at setup.
+     */
     public void setupPeople() {
         people.clear();
         for (int i = 0; i < this.numPeople; i++) {
             int x, y;
             Patch patch;
 
-            // This gurantees that the new person will be added
+            // This guarantees that the new person will be added
             do {
                 x = Params.rollCoord();
                 y = Params.rollCoord();
@@ -66,7 +63,11 @@ public class World {
         }
     }
 
-    // Creates and populates the world with patches of various levels of productivity
+    /**
+     * Initializes the map with patches of varying grain productivity.
+     * Performs multiple diffusion steps to spread grain and then sets
+     * the maximum grain levels for each patch.
+     */
     public void setupPatches() {
         // Initial creation of patches
         this.map = new Patch[maxCoord][maxCoord];
@@ -111,7 +112,14 @@ public class World {
         }
     }
 
-    protected synchronized void printStatistics(int tick) {
+    /**
+     * Prints statistical information about the wealth distribution
+     * of all people in the simulation at the specified tick.
+     * Calculates total, minimum, maximum, and average wealth, as well as Gini coefficient.
+     *
+     * @param tick the current simulation tick at which statistics are printed
+     */
+    protected void printStatistics(int tick) {
         double totalWealth = people.stream().mapToDouble(Person::getWealth).sum();
         double minWealth = people.stream().mapToDouble(Person::getWealth).min().orElse(0);
         double maxWealth = people.stream().mapToDouble(Person::getWealth).max().orElse(0);
@@ -129,6 +137,12 @@ public class World {
         
     }
 
+    /**
+     * Runs the simulation loop for the world.
+     * On each tick, replenishes grain on patches at intervals,
+     * lets each person act according to the reproduction strategy,
+     * and periodically prints statistics.
+     */
     public void runSimulation() {
         System.out.println("Starting Wealth Distribution Simulation, " + strategy);
         // Simulation loop
@@ -151,7 +165,7 @@ public class World {
             }
 
             // Print statistics every 100 ticks
-            if (tick % Params.PRINT_INTERVAL == 0) {
+            if (tick % Params.PRINT_WRITE_INTERVAL == 0) {
                 printStatistics(tick);
             }
             tick++;
@@ -163,10 +177,6 @@ public class World {
 
     public Patch[][] getMap() {
         return map;
-    }
-
-    public void setMap(Patch[][] map) {
-        this.map = map;
     }
 
     public List<Person> getPeople() {

@@ -10,6 +10,14 @@ import util.Params;
 import world.Patch;
 import world.World;
 
+/**
+ * Represents a person(agent) in the simulation.
+ *
+ * A person has attributes such as life expectancy, age, metabolism, wealth,
+ * vision, and a reference to their current patch and the world they exist in.
+ * A person can move around the world, harvest resources, age, metabolize,
+ * and reproduce using a given strategy.
+ */
 public class Person{
     private int lifeExpectancy;
     private int age; 
@@ -19,8 +27,14 @@ public class Person{
     private Patch currentPatch;
     private World world;
 
-    // Creation of a person will generate values to make them have unique attributes
-    // Wealth isn't inherited in this system.
+    /**
+     * Constructs a person with randomly generated life expectancy, age,
+     * metabolism, vision, and wealth.
+     *
+     * Wealth is randomly assigned and not inherited at creation without ReproductionStrategy.
+     *
+     * @param world the world the person exists in
+     */
     public Person(World world) {
         this.world = world;
         this.lifeExpectancy = Params.lifeExpectancy();
@@ -31,14 +45,19 @@ public class Person{
         this.vision = Params.vision();
     }
 
-        // Find the patch with the most grain within vision
+    /**
+     * Finds the best unoccupied patch with the highest amount of grain
+     * within the person's vision range.
+     *
+     * @return the patch with the most grain that is within reach
+     */
     private synchronized Patch findBestPatch() {
         Patch[][] map = world.getMap();
         List<Patch> visiblePatches = new ArrayList<>();
         int x = currentPatch.getXCoord();
         int y = currentPatch.getYCoord();
 
-        // Check patches within vision distance
+        // Add patches within vision distance
         for (int dx = -vision; dx <= vision; dx++) {
             for (int dy = -vision; dy <= vision; dy++) {
                 if (Math.abs(dx) + Math.abs(dy) <= vision) {
@@ -66,36 +85,55 @@ public class Person{
         return bestPatch;
     }
 
-      // Check if coordinates are valid
+    /**
+     * Checks if the given coordinates are within valid bounds of the world.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @return true if the coordinates are valid, false otherwise
+     */
     private boolean isValidCoord(int x, int y) {
         return x >= 0 && x < World.maxCoord && y >= 0 && y < World.maxCoord;
     }
-      // Harvest grain from current patch
+
+    /**
+     * Harvests grain from the current patch and adds it to the person's wealth.
+     * The patch's grain is reset to zero after harvesting.
+     */
     private void harvest() {
         double grain = currentPatch.getGrain();
         this.wealth += (int) grain;
         currentPatch.setGrain(0);
     }
 
-    // Consume grain based on metabolism
+    /**
+     * Reduces wealth based on metabolism and returns whether the person is still alive.
+     *
+     * @return true if the person has enough wealth after metabolizing, false otherwise
+     */
     private boolean metabolize() {
         this.wealth -= metabolism;
         return this.wealth >= 0;
     }
 
+    /**
+     * Checks if the person survives after metabolizing and aging.
+     *
+     * @return true if the person is still alive, false otherwise
+     */
     public boolean isAliveAfterMetabolize() {
         // Metabolize and Age to check if alive
         return metabolize() && age < lifeExpectancy;
     }
 
-    public boolean isAlive() {
-        // Metabolize and Age to check if alive
-        return this.wealth >= 0 && age < lifeExpectancy;
-    }
-
-    // Run method for thread-based execution
-    public synchronized void tick(ReproductionStrategy strategy) {
-
+    /**
+     * Executes a single simulation tick for the person.
+     * The person moves to the best available patch, harvests grain,
+     * and undergoes reproduction based on the given strategy.
+     *
+     * @param strategy the reproduction strategy used during this tick
+     */
+    public void tick(ReproductionStrategy strategy) {
         // Move to best patch
         Patch bestPatch = findBestPatch();
         if (bestPatch != currentPatch) {
@@ -111,7 +149,6 @@ public class Person{
     }
 
     //--- Getter and setter functions ---//
-    // Set the patch where the person is located
     public void setPatch(Patch patch) {
         this.currentPatch = patch;
     }
@@ -120,18 +157,6 @@ public class Person{
 
     public int getWealth() {
         return wealth;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public int getMetabolism() {
-        return metabolism;
-    }
-
-    public int getVision() {
-        return vision;
     }
 
     public Patch getCurrentPatch() {

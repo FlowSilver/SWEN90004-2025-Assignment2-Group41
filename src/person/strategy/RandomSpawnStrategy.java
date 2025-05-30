@@ -5,14 +5,36 @@ import util.Params;
 import world.Patch;
 import world.World;
 
+
+/**
+ * The RandomSpawnStrategy class implements the ReproductionStrategy interface.
+ *
+ * This strategy replaces a dead person with a new person randomly spawned in an
+ * unoccupied patch of the world map. It ensures that the new person is only placed
+ * in a patch that does not already contain another person.
+ *
+ */
 public class RandomSpawnStrategy implements ReproductionStrategy{
+
+    /**
+     * Replaces a dead person with a new person spawned at a random unoccupied patch.
+     *
+     * If the given person has died after metabolizing, a new Person object is created
+     * and placed in a randomly selected empty patch. The dead person is removed from
+     * the world's people list and the new person is added in their place.
+     *
+     * @param person the person to check for reproduction (only replaced if dead)
+     * @param world the simulation world in which the reproduction takes place
+     */
     @Override
-    public synchronized void reproduce(Person person, World world) {
+    public void reproduce(Person person, World world) {
         Patch[][] map = world.getMap();
 
         if (!person.isAliveAfterMetabolize()) {
             int x, y;
             Patch patch;
+
+            // New person is placed in a randomly selected empty patch
             do {
                 x = Params.rollCoord();
                 y = Params.rollCoord();
@@ -28,6 +50,11 @@ public class RandomSpawnStrategy implements ReproductionStrategy{
         }
     }
 
+    /**
+     * Returns the name of this reproduction strategy.
+     *
+     * @return the string "RandomSpawn"
+     */
     @Override
     public String toString() {
         return "RandomSpawn";

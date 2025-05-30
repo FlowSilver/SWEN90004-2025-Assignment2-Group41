@@ -9,8 +9,18 @@ import util.Params;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The Simulation class runs multiple simulations of the world model
+ * varying different parameters such as population size, reproduction strategy,
+ * and grain growth rate. Each simulation is repeated multiple times to gather data.
+ */
 public class Simulation {
 
+    /**
+     * Runs simulations for different population sizes.
+     * For each population size, runs 10 simulations with a default reproduction strategy
+     * and writes results to a CSV file named based on the population.
+     */
     public void simulateVariousPopulation() {
         List<Integer> populationList= new ArrayList<>();
         populationList.add(100);
@@ -26,6 +36,11 @@ public class Simulation {
         }
     }
 
+    /**
+     * Runs simulations using different reproduction strategies.
+     * For each reproduction strategy, runs 10 simulations with default population size and grain growth interval,
+     * writing results to a CSV file named after the strategy.
+     */
     public void simulateVariousReproductionRule() {
         List<ReproductionStrategy> strategies= new ArrayList<>();
         strategies.add(new RandomSpawnStrategy());
@@ -41,6 +56,11 @@ public class Simulation {
         }
     }
 
+    /**
+     * Runs simulations for different grain growth intervals.
+     * For each growth rate, runs 10 simulations with default population and reproduction strategy,
+     * writing results to a CSV file named based on the growth rate.
+     */
     public void simulateVariousGrowthRate() {
         List<Integer> growthRateList= new ArrayList<>();
         growthRateList.add(1);

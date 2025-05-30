@@ -4,6 +4,11 @@ import java.util.List;
 import person.Person;
 import util.Params;
 
+/**
+ * The Patch class represents a unit of land in the simulation world.
+ * Each patch may contain a certain amount of grain and may be occupied by a Person.
+ * Grain can be diffused to neighboring patches, and patches can be replenished to their max grain.
+ */
 public class Patch{
     private double grain;
     private double maxGrain;
@@ -11,6 +16,8 @@ public class Patch{
     private int yCoord;
     private Person person;
 
+
+    // All possible directions to adjacent patches (including diagonals)
     // Used for finding all valid coordinates
     private static int[][] dirs = {
         {-1, -1}, {-1, 0}, {-1, 1},
@@ -18,8 +25,12 @@ public class Patch{
         {1, -1}, {1, 0}, {1, 1}
     };
 
-    // Upon creation, the patch is randomly assigned to either be
-    // A normal patch or to have max grain
+    /**
+     * Constructs a Patch at the specified coordinates.
+     * The patch may be initialized with maximum grain based on model parameters.
+     * @param xCoord the x-coordinate of the patch
+     * @param yCoord the y-coordinate of the patch
+     */
     public Patch(int xCoord, int yCoord) {
         this.maxGrain = Params.rollBestLand();
         this.grain = this.maxGrain;
@@ -29,9 +40,11 @@ public class Patch{
 
     //--- Setup functions ---//
 
-    // DELETE WHEN CONSIDERED: For determining movement of person, I recommend using the logic found here
-    // function used to spread grain through to adjacent patches by taking a quarter of the grain from
-    // a given patch and distributing it.
+    /**
+     * Distributes a quarter of the grain to all valid neighboring patches equally.
+     * If some neighbors are invalid, their share of the grain returns to the original patch.
+     * @param map the 2D array of patches representing the simulation world
+     */
     public void diffuse(Patch[][] map) {
 
         // Iterates through all possible adjacent patches and adds the valid coordinates to the list
@@ -61,7 +74,13 @@ public class Patch{
         }
     }
 
-    // Checks if coordinate is on the map
+
+    /**
+     * Checks if the given coordinates are within the bounds of the world.
+     * @param x the x-coordinate to check
+     * @param y the y-coordinate to check
+     * @return true if the coordinates are valid; false otherwise
+     */
     private boolean isValidCoord(int x, int y) {
         if (x < 0 || y < 0 || x >= World.maxCoord || y >= World.maxCoord) {
             return false;
@@ -69,19 +88,24 @@ public class Patch{
         return true;
     }
 
-    // Rounds down to the nearest grain integer
+    /**
+     * Rounds the grain value down to the nearest whole number.
+     */
     public void floorGrain() {
         this.setGrain(Math.floor(grain));
     }
     
     //--- Functions while model is running ---//
 
-    public synchronized void replenish() {
+    /**
+     * Replenishes the patch to its maximum grain level.
+     * This method is synchronized to ensure thread safety.
+     */
+    public void replenish() {
         this.grain = this.maxGrain;
     }
 
     //--- Getter and setter functions ---//
-
     public double getGrain() {
         return grain;
     }
