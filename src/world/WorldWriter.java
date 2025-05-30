@@ -76,11 +76,28 @@ public class WorldWriter extends World {
     private void writeStatistics(World world, int tick) {
         List<Person> people = world.getPeople();
         double totalWealth = people.stream().mapToDouble(Person::getWealth).sum();
-        double minWealth = people.stream().mapToDouble(Person::getWealth).min().orElse(0);
         double maxWealth = people.stream().mapToDouble(Person::getWealth).max().orElse(0);
         double avgWealth = totalWealth / people.size();
+
         double meanDiff = 0;
+        int numLowerClass = 0;
+        int numMiddleClass = 0;
+        int numUpperClass = 0;
+
+        double oneThird = (1.0 / 3) * maxWealth;
+        double twoThirds = (2.0 / 3) * maxWealth;
+
         for (Person p1 : people) {
+            double wealth = p1.getWealth();
+
+            if (wealth <= oneThird) {
+                numLowerClass++;
+            } else if (wealth <= twoThirds) {
+                numMiddleClass++;
+            } else {
+                numUpperClass++;
+            }
+
             for (Person p2 : people) {
                 meanDiff += Math.abs(p1.getWealth() - p2.getWealth());
             }
@@ -89,8 +106,8 @@ public class WorldWriter extends World {
 
         // Write to CSV file in the exact format
         try {
-            String stats = String.format("%d, %.2f, %.2f, %.2f, %.2f, %.4f",
-                    tick, totalWealth, minWealth, maxWealth, avgWealth, gini);
+            String stats = String.format("%d, %.2f, %.4f, %d, %d, %d",
+                    tick, totalWealth, gini, numLowerClass, numMiddleClass, numUpperClass);
             writer.write(stats + "\n");
             writer.flush();
         } catch (IOException e) {

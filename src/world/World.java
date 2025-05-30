@@ -121,19 +121,36 @@ public class World {
      */
     protected void printStatistics(int tick) {
         double totalWealth = people.stream().mapToDouble(Person::getWealth).sum();
-        double minWealth = people.stream().mapToDouble(Person::getWealth).min().orElse(0);
         double maxWealth = people.stream().mapToDouble(Person::getWealth).max().orElse(0);
         double avgWealth = totalWealth / people.size();
+
         double meanDiff = 0;
+        int numLowerClass = 0;
+        int numMiddleClass = 0;
+        int numUpperClass = 0;
+        double oneThird = (1.0 / 3) * maxWealth;
+        double twoThirds = (2.0 / 3) * maxWealth;
+
+
         for (Person p1 : people) {
+            double wealth = p1.getWealth();
+
+            if (wealth <= oneThird) {
+                numLowerClass++;
+            } else if (wealth <= twoThirds) {
+                numMiddleClass++;
+            } else {
+                numUpperClass++;
+            }
+
             for (Person p2 : people) {
                 meanDiff += Math.abs(p1.getWealth() - p2.getWealth());
             }
         }
         double gini = meanDiff / (2 * people.size() * people.size() * avgWealth);
 
-        System.out.printf("Tick %d: Total Wealth = %.2f, Min = %.2f, Max = %.2f, Avg = %.2f, Gini = %.4f%n",
-                tick, totalWealth, minWealth, maxWealth, avgWealth, gini);
+        System.out.printf("Tick %d: Total Wealth = %.2f, Gini = %.4f, Low = %d, Middle = %d, Upper = %d%n",
+                tick, totalWealth, gini, numLowerClass, numMiddleClass, numUpperClass);
         
     }
 
