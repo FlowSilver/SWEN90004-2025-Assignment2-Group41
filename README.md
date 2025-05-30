@@ -45,7 +45,7 @@ The simulation is automated and runs from the `main` method in `Main.java`. It e
      ```bash
      java -cp src Main
      ```
-   - Or run in IDE
+   - Or run in IDE (If run Main.java many times, there will be more runs of simulation (10*excution_times))
 
    - The simulation will automatically run all scenarios, producing CSV files in the `/stat` folder.
 
