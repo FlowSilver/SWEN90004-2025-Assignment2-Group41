@@ -15,9 +15,9 @@ input_output_pairs = [
     ("RandomSpawn.csv", "RandomSpawn_Processed.csv"),
     ("Inheritance.csv", "Inheritance_Processed.csv"),
     ("GrowthRate_1.csv", "GrowthRate_1_Processed.csv"),
+    ("GrowthRate_5.csv", "GrowthRate_5_Processed.csv"),
     ("GrowthRate_10.csv", "GrowthRate_10_Processed.csv"),
     ("GrowthRate_50.csv", "GrowthRate_50_Processed.csv"),
-    ("GrowthRate_100.csv", "GrowthRate_100_Processed.csv"),
     ("Population_100.csv", "Population_100_Processed.csv"),
     ("Population_250.csv", "Population_250_Processed.csv"),
     ("Population_500.csv", "Population_500_Processed.csv"),
@@ -36,7 +36,7 @@ def process_file(input_file, output_file):
     data_by_tick = defaultdict(list)
 
     # Tick_Interval, when changing this, also changing MAX_TICK in Params.java
-    tick_interval = 10000
+    tick_interval = 1000 + 1
     # Read input CSV and group data by tick % tick_interval
     with open(input_file, newline='') as csvfile:
         reader = csv.reader(csvfile)
@@ -97,7 +97,7 @@ def plot_output(output_file, input_filename_base):
 
     ax1.set_xlabel('Tick')
     ax1.set_ylabel('Gini', color='tab:gray')
-    ax1.plot(ticks, ginis, label='Total Wealth', color='tab:blue', linestyle='-')
+    ax1.plot(ticks, ginis, label='Gini-index', color='tab:blue', linestyle='-')
     ax1.tick_params(axis='y', labelcolor='tab:blue')
 
     fig.tight_layout()

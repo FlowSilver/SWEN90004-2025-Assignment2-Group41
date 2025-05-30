@@ -99,10 +99,16 @@ public class Patch{
 
     /**
      * Replenishes the patch to its maximum grain level.
-     * This method is synchronized to ensure thread safety.
      */
     public void replenish() {
         this.grain = this.maxGrain;
+    }
+
+    /**
+     * Replenishes the patch to its maximum grain level.
+     */
+    public void grow() {
+        this.grain += Params.NUM_GROW;
     }
 
     //--- Getter and setter functions ---//

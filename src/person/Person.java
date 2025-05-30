@@ -121,8 +121,9 @@ public class Person{
      *
      * @return true if the person is still alive, false otherwise
      */
-    public boolean isAliveAfterMetabolize() {
+    public boolean isAliveAfterMetabolizeAndAging() {
         // Metabolize and Age to check if alive
+        age++;
         return metabolize() && age < lifeExpectancy;
     }
 

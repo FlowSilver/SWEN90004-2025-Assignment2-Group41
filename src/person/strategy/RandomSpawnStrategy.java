@@ -30,7 +30,7 @@ public class RandomSpawnStrategy implements ReproductionStrategy{
     public void reproduce(Person person, World world) {
         Patch[][] map = world.getMap();
 
-        if (!person.isAliveAfterMetabolize()) {
+        if (!person.isAliveAfterMetabolizeAndAging()) {
             int x, y;
             Patch patch;
 

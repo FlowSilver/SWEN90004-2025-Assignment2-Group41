@@ -29,7 +29,7 @@ public class DefaultStrategy implements ReproductionStrategy {
     public void reproduce(Person person, World world) {
         Patch parentPatch = person.getCurrentPatch();
 
-        if (!person.isAliveAfterMetabolize()) {
+        if (!person.isAliveAfterMetabolizeAndAging()) {
             Person newPerson = new Person(world);
             newPerson.setPatch(parentPatch);
 

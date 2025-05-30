@@ -63,10 +63,10 @@ public class Simulation {
      */
     public void simulateVariousGrowthRate() {
         List<Integer> growthRateList= new ArrayList<>();
-        growthRateList.add(1);
-        growthRateList.add(Params.GRAIN_GROWTH_INTERVAL); //10
+        growthRateList.add(Params.GRAIN_GROWTH_INTERVAL); //1
+        growthRateList.add(5);
+        growthRateList.add(10);
         growthRateList.add(50);
-        growthRateList.add(100);
 
         for(Integer i: growthRateList) {
             for (int j = 0; j < 10; j++) {

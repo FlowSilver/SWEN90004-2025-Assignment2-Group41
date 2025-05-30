@@ -8,18 +8,19 @@ import world.World;
 public class Params {
 
     //--- Parameters that can be changed ---//
-    public static final int MIN_LIFE = 10; // minimum lifespan (in ticks) 
-    public static final int MAX_LIFE = 1000; // maximum lifespan (in ticks)
+    public static final int MIN_LIFE = 1; // minimum lifespan (in ticks)
+    public static final int MAX_LIFE = 83; // maximum lifespan (in ticks)
     public static final int NUM_PEOPLE = 250; // the number of people that always exist in the model
     public static final int PERCENT_BEST_LAND = 10; // the number of patches that are seeded with the max grain at setup
     public static final int MAX_GRAIN = 50; // the maximum number of grain that any patch could have
-    public static final int GRAIN_GROWTH_INTERVAL = 10; // how long it takes for each grain to replenish (in ticks)
+    public static final int GRAIN_GROWTH_INTERVAL = 1; // how long it takes for each grain to replenish (in ticks)
     public static final int MAX_METABOLISM = 15; // the maximum amount of grain consumed per tick
     public static final int MAX_VISION = 5; // the furthest possible distance that a person can see
     public static final int PRINT_WRITE_INTERVAL = 100; // interval for printing statistics (every 100 ticks)
-    
+    public static final int NUM_GROW = 4; // Number of Grain that grows each time
+
     // When changing this, also changing tick_interval in process_results.py
-    public static final int MAX_TICK = 10000; // the maximum tick number of a simulation.
+    public static final int MAX_TICK = 1000; // the maximum tick number of a simulation.
 
     //--- Randomizers for Patch and Person classes ---//
 

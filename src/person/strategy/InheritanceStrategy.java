@@ -31,7 +31,7 @@ public class InheritanceStrategy implements ReproductionStrategy {
         Patch parentPatch = person.getCurrentPatch();
 
         // The new Person is created at the same patch
-        if (!person.isAliveAfterMetabolize()) {
+        if (!person.isAliveAfterMetabolizeAndAging()) {
             Person newPerson = new Person(world);
             newPerson.setPatch(parentPatch);
             newPerson.setWealth(inheritance);
