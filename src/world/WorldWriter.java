@@ -67,8 +67,7 @@ public class WorldWriter extends World {
 
     /**
      * Writes the current statistics of the world simulation to the CSV file.
-     * Statistics include tick, total wealth, minimum, maximum, average wealth,
-     * and the Gini coefficient measuring inequality.
+     * Statistics include tick, total wealth, the Gini-index measuring inequality, number of each class.
      *
      * @param world the World instance from which to retrieve statistics
      * @param tick the current simulation tick number

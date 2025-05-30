@@ -115,7 +115,7 @@ public class World {
     /**
      * Prints statistical information about the wealth distribution
      * of all people in the simulation at the specified tick.
-     * Calculates total, minimum, maximum, and average wealth, as well as Gini coefficient.
+     * Calculates total, numbers of each class, as well as Gini coefficient.
      *
      * @param tick the current simulation tick at which statistics are printed
      */
