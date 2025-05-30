@@ -16,7 +16,7 @@ public class Params {
     public static final int GRAIN_GROWTH_INTERVAL = 1; // how long it takes for each grain to replenish (in ticks)
     public static final int MAX_METABOLISM = 15; // the maximum amount of grain consumed per tick
     public static final int MAX_VISION = 5; // the furthest possible distance that a person can see
-    public static final int PRINT_WRITE_INTERVAL = 100; // interval for printing statistics (every 100 ticks)
+    public static final int PRINT_WRITE_INTERVAL = 10; // interval for printing statistics (every 100 ticks)
     public static final int NUM_GROW = 4; // Number of Grain that grows each time
 
     // When changing this, also changing tick_interval in process_results.py

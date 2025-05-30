@@ -165,11 +165,11 @@ public class World {
         // Simulation loop
         for (int tick = 0; tick < Params.MAX_TICK+1; tick++) {
 
-            // Replenish
+            // Grain grows
             if (tick % this.grainGrowthRate == 0) {
                 for (Patch[] row : map) {
                     for (Patch patch : row) {
-                        // Replenish
+                        // Grain grows
                         patch.grow();
                     }
                 }
