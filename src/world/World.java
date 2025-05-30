@@ -132,7 +132,7 @@ public class World {
     public void runSimulation() {
         System.out.println("Starting Wealth Distribution Simulation, " + strategy);
         // Simulation loop
-        for (int tick = 0; tick < Params.MAX_TICK; tick++) {
+        for (int tick = 0; tick < Params.MAX_TICK+2; tick++) {
 
             // Replenish
             if (tick % this.grainGrowthRate == 0) {
