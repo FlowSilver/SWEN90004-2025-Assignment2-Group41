@@ -2,13 +2,17 @@
 
 # Wealth Distribution Simulation
 
-This project implements a Java-based simulation of the NetLogo Wealth Distribution model, automating simulations for three scenarios of different reproduction rules, population sizes, and grain growth rates. Each case in scenarios runs 10 times, and results are saved as CSV files in the `/stat` folder. A Python script is provided to process the results.
+This project implements a Java-based simulation of the NetLogo Wealth Distribution model, automating simulations for three scenarios of different reproduction rules, population sizes, and grain growth rates. Each case in scenarios runs 10 times, and results are saved as CSV files in the `/stat` folder, plots are saved as png in the 
+`/stat/plots` folder. A Python script is provided to process the results.
+
+The Main.java run simulations, print and write the results. If user only wishes to see simulation, 
+user could simply create instance of World.java with parameter they want, and call runSimulation method.
 
 
 ## Prerequisites
 
-- **Java**: JDK 8 or higher installed.
-- **Python**: Python 3.6 or higher with `pandas` installed (for processing results).
+- **Java**: JDK 8 or higher installed (for simulations).
+- **Python**: Python 3.6 or higher (for processing results).
 - **Operating System**: Compatible with Windows, not tested on macOS and Linux (should work).
 
 ## Setup
@@ -18,10 +22,6 @@ This project implements a Java-based simulation of the NetLogo Wealth Distributi
    - `src/Main.java`: The main Java program.
    - `stat/`: Output folder for CSV files.
    - `stat/process_results.py`: Python script to process CSV files.
-3. **Install Python Dependencies**:
-   ```bash
-   pip install pandas
-   ```
 
 ## Running the Simulation
 
@@ -80,7 +80,7 @@ The simulation is automated and runs from the `main` method in `Main.java`. It e
 ## Troubleshooting
 
 - **File Permission Errors**: Ensure the `/stat` folder is writable. If issues occur, check file permissions or specify an absolute path in the Java code.
-- **Missing Python Dependencies**: Install `pandas` using `pip install pandas` if the Python script fails.
+- **Missing Python Dependencies**: Install `pip install [What's missing]` if the Python script fails.
 - **Java Compilation Errors**: Verify JDK is installed and the `src` directory contains all the java files.
 
 ## References
